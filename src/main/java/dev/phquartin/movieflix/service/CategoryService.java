@@ -2,6 +2,8 @@ package dev.phquartin.movieflix.service;
 
 import dev.phquartin.movieflix.model.Category;
 import dev.phquartin.movieflix.repository.CategoryRepository;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +16,24 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
+    public Category createCategory(Category category) {
+        if (category.getName().isEmpty() || category.getName().isBlank()) throw new IllegalArgumentException("Category NAME cannot be null");
+
+        // Deixar um padrão dentro do Banco de Dados
+        category.setName(StringUtils.capitalize(category.getName().strip().toLowerCase()));
+
+        try {
+            return categoryRepository.save(category);
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("A category with name " + category.getName() + " already exists");
+        }
+    }
+
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
-
+    public Category getCategoryById(Long id) {
+        return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
+    }
 
 }
