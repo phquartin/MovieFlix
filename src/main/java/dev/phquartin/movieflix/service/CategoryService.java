@@ -3,6 +3,7 @@ package dev.phquartin.movieflix.service;
 import dev.phquartin.movieflix.model.Category;
 import dev.phquartin.movieflix.repository.CategoryRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,11 @@ public class CategoryService {
     }
     public Category getCategoryById(Long id) {
         return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
+    }
+
+    public void deleteCategoryById(Long id) {
+        if (!categoryRepository.existsById(id)) throw new RuntimeException("Category not found");
+        categoryRepository.deleteById(id);
     }
 
 }
