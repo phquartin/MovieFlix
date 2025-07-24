@@ -22,7 +22,7 @@ public class CategoryService {
         this.mapper = mapper;
     }
 
-    public CategoryResponse createCategory(CategoryRequest request) {
+    public CategoryResponse create(CategoryRequest request) {
 
         String normalizedName = StringUtils.capitalize(request.name().strip().toLowerCase());
 
@@ -38,18 +38,18 @@ public class CategoryService {
         return mapper.toResponse(savedEntity);
     }
 
-    public List<CategoryResponse> getAllCategories() {
+    public List<CategoryResponse> getAll() {
         return repository.findAll()
                 .stream()
                 .map(mapper::toResponse)
                 .toList();
     }
-    public CategoryResponse getCategoryById(Long id) {
+    public CategoryResponse getById(Long id) {
         Category entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         return mapper.toResponse(entity);
     }
 
-    public void deleteCategoryById(Long id) {
+    public void delete(Long id) {
         if (!repository.existsById(id)) throw new ResourceNotFoundException("Category not found");
         repository.deleteById(id);
     }

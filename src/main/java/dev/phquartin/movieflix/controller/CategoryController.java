@@ -22,8 +22,8 @@ public class CategoryController {
     }
 
     @PostMapping()
-    public ResponseEntity<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest userCategory) {
-        CategoryResponse saved = categoryService.createCategory(userCategory);
+    public ResponseEntity<CategoryResponse> create(@RequestBody @Valid CategoryRequest userCategory) {
+        CategoryResponse saved = categoryService.create(userCategory);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -33,20 +33,20 @@ public class CategoryController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
-        List<CategoryResponse> allCategories = categoryService.getAllCategories();
+    public ResponseEntity<List<CategoryResponse>> listAll() {
+        List<CategoryResponse> allCategories = categoryService.getAll();
         return ResponseEntity.ok().body(allCategories);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Long id) {
-        CategoryResponse category = categoryService.getCategoryById(id);
+    public ResponseEntity<CategoryResponse> getById(@PathVariable Long id) {
+        CategoryResponse category = categoryService.getById(id);
         return ResponseEntity.ok().body(category);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategoryById(@PathVariable Long id) {
-        categoryService.deleteCategoryById(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        categoryService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
