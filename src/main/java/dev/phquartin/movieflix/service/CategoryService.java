@@ -29,6 +29,7 @@ public class CategoryService {
         if (repository.existsByName(normalizedName)) throw new ResourceAlreadyExistsException("A category with name " + normalizedName + " already exists");
 
         Category entity = mapper.toEntity(request);
+        entity.setName(normalizedName);
 
         Category savedEntity = repository.save(entity);
 
