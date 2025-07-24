@@ -1,8 +1,10 @@
 package dev.phquartin.movieflix.controller;
 
 
-import dev.phquartin.movieflix.model.Category;
+import dev.phquartin.movieflix.controller.request.CategoryRequest;
+import dev.phquartin.movieflix.controller.response.CategoryResponse;
 import dev.phquartin.movieflix.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -20,32 +22,32 @@ public class CategoryController {
     }
 
     @PostMapping()
-    public ResponseEntity<Void> createCategory(@RequestBody Category userCategory) {
-        Category saved = categoryService.createCategory(userCategory);
+    public ResponseEntity<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest userCategory) {
+        CategoryResponse saved = categoryService.createCategory(userCategory);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(saved.getId())
+                .buildAndExpand(saved.id())
                 .toUri();
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(saved);
     }
 
     @GetMapping()
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> allCategories = categoryService.getAllCategories();
+    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
+        List<CategoryResponse> allCategories = categoryService.getAllCategories();
         return ResponseEntity.ok().body(allCategories);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
-        Category category = categoryService.getCategoryById(id);
+    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Long id) {
+        CategoryResponse category = categoryService.getCategoryById(id);
         return ResponseEntity.ok().body(category);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategoryById(@PathVariable Long id) {
         categoryService.deleteCategoryById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
 }

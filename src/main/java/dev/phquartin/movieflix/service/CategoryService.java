@@ -1,10 +1,13 @@
 package dev.phquartin.movieflix.service;
 
+import dev.phquartin.movieflix.controller.request.CategoryRequest;
+import dev.phquartin.movieflix.controller.response.CategoryResponse;
+import dev.phquartin.movieflix.exception.ResourceAlreadyExistsException;
+import dev.phquartin.movieflix.exception.ResourceNotFoundException;
+import dev.phquartin.movieflix.mapper.CategoryMapper;
 import dev.phquartin.movieflix.model.Category;
 import dev.phquartin.movieflix.repository.CategoryRepository;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.ObjectNotFoundException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,34 +15,43 @@ import java.util.List;
 @Service
 public class CategoryService {
 
-    private final CategoryRepository categoryRepository;
-    public CategoryService(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+    private final CategoryRepository repository;
+    private final CategoryMapper mapper;
+    public CategoryService(CategoryRepository categoryRepository, CategoryMapper mapper) {
+        this.repository = categoryRepository;
+        this.mapper = mapper;
     }
 
-    public Category createCategory(Category category) {
-        if (category.getName().isEmpty() || category.getName().isBlank()) throw new IllegalArgumentException("Category NAME cannot be null");
+    public CategoryResponse createCategory(CategoryRequest request) {
 
-        // Deixar um padrão dentro do Banco de Dados
-        category.setName(StringUtils.capitalize(category.getName().strip().toLowerCase()));
+        String normalizedName = StringUtils.capitalize(request.name().strip().toLowerCase());
 
-        try {
-            return categoryRepository.save(category);
-        } catch (DataIntegrityViolationException e) {
-            throw new RuntimeException("A category with name " + category.getName() + " already exists");
-        }
+        if (repository.existsByName(normalizedName)) throw new ResourceAlreadyExistsException("A category with name " + normalizedName + " already exists");
+
+        Category entity = Category
+                .builder()
+                .name(normalizedName)
+                .build();
+
+        Category savedEntity = repository.save(entity);
+
+        return mapper.toResponse(savedEntity);
     }
 
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryResponse> getAllCategories() {
+        return repository.findAll()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
     }
-    public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
+    public CategoryResponse getCategoryById(Long id) {
+        Category entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        return mapper.toResponse(entity);
     }
 
     public void deleteCategoryById(Long id) {
-        if (!categoryRepository.existsById(id)) throw new RuntimeException("Category not found");
-        categoryRepository.deleteById(id);
+        if (!repository.existsById(id)) throw new ResourceNotFoundException("Category not found");
+        repository.deleteById(id);
     }
 
 }
