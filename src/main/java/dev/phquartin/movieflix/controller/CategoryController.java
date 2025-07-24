@@ -16,14 +16,14 @@ import java.util.List;
 @RequestMapping("/categories")
 public class CategoryController {
 
-    private final CategoryService categoryService;
+    private final CategoryService service;
     public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
+        this.service = categoryService;
     }
 
     @PostMapping()
     public ResponseEntity<CategoryResponse> create(@RequestBody @Valid CategoryRequest userCategory) {
-        CategoryResponse saved = categoryService.create(userCategory);
+        CategoryResponse saved = service.create(userCategory);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -34,19 +34,19 @@ public class CategoryController {
 
     @GetMapping()
     public ResponseEntity<List<CategoryResponse>> listAll() {
-        List<CategoryResponse> allCategories = categoryService.getAll();
+        List<CategoryResponse> allCategories = service.getAll();
         return ResponseEntity.ok().body(allCategories);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponse> getById(@PathVariable Long id) {
-        CategoryResponse category = categoryService.getById(id);
+        CategoryResponse category = service.getById(id);
         return ResponseEntity.ok().body(category);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        categoryService.delete(id);
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
