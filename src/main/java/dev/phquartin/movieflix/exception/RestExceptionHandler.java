@@ -28,6 +28,20 @@ public class RestExceptionHandler {
         return ResponseEntity.internalServerError().body(errorResponse);
     }
 
+    // Quando a pagina nao for encontrada (Nao existir uma rota)
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleException(HttpServletRequest request) {
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message("Page not found")
+                .status(404)
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now().format(formatter))
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(ResourceAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleException(ResourceAlreadyExistsException e, HttpServletRequest request) {
 
@@ -46,20 +60,6 @@ public class RestExceptionHandler {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .message(e.getMessage())
-                .status(404)
-                .path(request.getRequestURI())
-                .timestamp(LocalDateTime.now().format(formatter))
-                .build();
-
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-    }
-
-    // Quando a pagina nao for encontrada (Nao existir uma rota)
-    @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ErrorResponse> handleException(HttpServletRequest request) {
-
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .message("Page not found")
                 .status(404)
                 .path(request.getRequestURI())
                 .timestamp(LocalDateTime.now().format(formatter))
