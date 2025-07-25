@@ -58,7 +58,11 @@ MovieFlix é uma aplicação Spring Boot que fornece endpoints para criar, ler e
 
 ### Filmes
 
-`em desenvolvimento`
+- `GET /movies` - Listar todos os filmes
+- `GET /movies/{id}` - Obter um filme por ID
+- `POST /movies` - Criar um novo filme
+- `DELETE /movies/{id}` - Excluir um filme
+
 
 ## Esquema do Banco de Dados
 
