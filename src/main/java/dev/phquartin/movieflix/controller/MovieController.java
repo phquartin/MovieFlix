@@ -40,6 +40,13 @@ public class MovieController {
     public ResponseEntity<MovieResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok().body(service.getById(id));
     }
+    @GetMapping("/search/{title}")
+    public ResponseEntity<List<MovieResponse>> searchByTitle(@PathVariable String title) {
+        List<MovieResponse> movies = service.getAll().stream()
+                .filter(movie -> movie.title().contains(title))
+                .toList();
+        return ResponseEntity.ok().body(movies);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
