@@ -21,8 +21,8 @@ public class MovieController {
     }
 
     @PostMapping()
-    public ResponseEntity<MovieResponse> create(@RequestBody @Valid MovieRequest movie) {
-        MovieResponse saved = service.create(movie);
+    public ResponseEntity<MovieResponse> create(@RequestBody @Valid MovieRequest request) {
+        MovieResponse saved = service.create(request);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -45,6 +45,12 @@ public class MovieController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MovieResponse> update(@PathVariable Long id, @RequestBody @Valid MovieRequest request) {
+        MovieResponse saved = service.update(id, request);
+        return ResponseEntity.ok().body(saved);
     }
 
 

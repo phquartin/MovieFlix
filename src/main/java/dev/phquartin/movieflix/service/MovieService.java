@@ -65,6 +65,30 @@ public class MovieService {
         repository.deleteById(id);
     }
 
+    // TODO: Testar
+    public MovieResponse update(Long id, MovieRequest request){
+        repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Movie not found"));
+        String normalizedTitle = StringUtils.capitalize(request.title().strip());
+        if (repository.existsByTitle(normalizedTitle)) throw new ResourceAlreadyExistsException("A movie with name " + normalizedTitle + " already exists");
+
+        List<Streaming> streaming = getStreaming(request);
+        List<Category> categories = getCategories(request);
+
+        Movie movie = mapper.toEntity(request);
+        movie.setId(id);
+        movie.setTitle(normalizedTitle);
+
+        movie.getCategories().clear();
+        movie.getStreaming().clear();
+
+        movie.getCategories().addAll(categories);
+        movie.getStreaming().addAll(streaming);
+
+        repository.save(movie);
+        return mapper.toResponse(movie);
+
+    }
+
     private List<Category> getCategories(MovieRequest movieRequest){
         List<Long> categories_id = movieRequest.categories();
         List<CategoryResponse> categories_response = categories_id.stream()
