@@ -42,7 +42,8 @@ public class MovieController {
     }
     @GetMapping("/search/{title}")
     public ResponseEntity<List<MovieResponse>> searchByTitle(@PathVariable String title) {
-        List<MovieResponse> movies = service.getAll().stream()
+        List<MovieResponse> movies = service.getAll()
+                .stream()
                 .filter(movie -> movie.title().contains(title))
                 .toList();
         return ResponseEntity.ok().body(movies);
