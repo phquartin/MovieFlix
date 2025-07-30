@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @ControllerAdvice
 public class RestExceptionHandler {
@@ -56,7 +57,7 @@ public class RestExceptionHandler {
             HttpServletRequest request) {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .message(e.getMessage())
+                .message(Objects.requireNonNull(e.getFieldError()).getDefaultMessage())
                 .status(400)
                 .path(request.getRequestURI())
                 .timestamp(LocalDateTime.now().format(formatter))
