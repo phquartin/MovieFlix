@@ -1,5 +1,8 @@
-package dev.phquartin.movieflix.exception;
+package dev.phquartin.movieflix.config;
 
+import dev.phquartin.movieflix.exception.ErrorResponse;
+import dev.phquartin.movieflix.exception.ResourceAlreadyExistsException;
+import dev.phquartin.movieflix.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
