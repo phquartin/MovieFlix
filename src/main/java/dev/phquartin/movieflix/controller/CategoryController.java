@@ -5,6 +5,7 @@ import dev.phquartin.movieflix.controller.request.CategoryRequest;
 import dev.phquartin.movieflix.controller.response.CategoryResponse;
 import dev.phquartin.movieflix.service.CategoryService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,12 +25,7 @@ public class CategoryController {
     @PostMapping()
     public ResponseEntity<CategoryResponse> create(@RequestBody @Valid CategoryRequest userCategory) {
         CategoryResponse saved = service.create(userCategory);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(saved.id())
-                .toUri();
-        return ResponseEntity.created(location).body(saved);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @GetMapping()

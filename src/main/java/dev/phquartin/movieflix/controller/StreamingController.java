@@ -4,6 +4,7 @@ import dev.phquartin.movieflix.controller.request.StreamingRequest;
 import dev.phquartin.movieflix.controller.response.StreamingResponse;
 import dev.phquartin.movieflix.service.StreamingService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -23,12 +24,7 @@ public class StreamingController {
     @PostMapping()
     public ResponseEntity<StreamingResponse> create(@RequestBody @Valid StreamingRequest request) {
         StreamingResponse saved = service.create(request);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(saved.id())
-                .toUri();
-        return ResponseEntity.created(location).body(saved);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @GetMapping()

@@ -1,6 +1,5 @@
 package dev.phquartin.movieflix.mapper;
 
-import dev.phquartin.movieflix.controller.request.CategoryRequest;
 import dev.phquartin.movieflix.controller.request.StreamingRequest;
 import dev.phquartin.movieflix.controller.response.StreamingResponse;
 import dev.phquartin.movieflix.model.Streaming;
