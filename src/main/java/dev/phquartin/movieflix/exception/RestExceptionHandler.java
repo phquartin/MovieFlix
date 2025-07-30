@@ -30,6 +30,19 @@ public class RestExceptionHandler {
         return ResponseEntity.internalServerError().body(errorResponse);
     }
 
+    // Erro de login
+    @ExceptionHandler (org.springframework.security.authentication.BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleException(org.springframework.security.authentication.BadCredentialsException e, HttpServletRequest request) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message("Invalid username or password")
+                .status(401)
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now().format(formatter))
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
     // Quando a pagina nao for encontrada (Nao existir uma rota)
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponse> handleException(HttpServletRequest request) {
