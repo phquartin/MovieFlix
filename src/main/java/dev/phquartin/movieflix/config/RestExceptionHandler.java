@@ -35,7 +35,7 @@ public class RestExceptionHandler {
 
     // Erro de login
     @ExceptionHandler (org.springframework.security.authentication.BadCredentialsException.class)
-    public ResponseEntity<ErrorResponse> handleException(org.springframework.security.authentication.BadCredentialsException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleBadCredentialsException(HttpServletRequest request) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .message("Invalid username or password")
                 .status(401)
@@ -48,7 +48,7 @@ public class RestExceptionHandler {
 
     // Quando a pagina nao for encontrada (Nao existir uma rota)
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ErrorResponse> handleException(HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleNoResourceFoundException(HttpServletRequest request) {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .message("Page not found")
@@ -80,7 +80,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleException(ResourceAlreadyExistsException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleResourceAlreadyExistsException(ResourceAlreadyExistsException e, HttpServletRequest request) {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .message(e.getMessage())
@@ -93,7 +93,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleException(ResourceNotFoundException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException e, HttpServletRequest request) {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .message(e.getMessage())
